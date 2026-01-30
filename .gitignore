@@ -1,0 +1,14 @@
+# Python (Backend)
+backend/TILenv/
+backend/__pycache__/
+backend/.env
+.vscode/
+backend/*.pyc
+
+# Frontend
+frontend/node_modules/
+frontend/.next/
+frontend/.env*
+
+# OS specific
+.DS_Store
