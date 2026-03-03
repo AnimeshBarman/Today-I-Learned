@@ -61,5 +61,6 @@ def verify_token(token: str):
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
 
         return payload
-    except JWTError:
+    except Exception as e:
+        print(f"Token verify error: {e}")
         return None

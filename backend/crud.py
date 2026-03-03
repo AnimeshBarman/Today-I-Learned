@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
-from . import security, models, schemas, ai_service
+import security, models, schemas, ai_service
 from datetime import timezone, datetime
+from fastapi import HTTPException
 
 
 
@@ -84,7 +85,7 @@ def create_post(db: Session, data: schemas.TILPostCreate, user_id: int):
     results = ai_service.generate_ai_content(data.title)
 
     if not results or "error" in results:
-        raise ValueError("Error while generating ai response..!")
+        raise HTTPException(status_code=500, detail=f"Ai Error: {results['error']}")
     
     new_post = models.TILPost(
         title = data.title,
