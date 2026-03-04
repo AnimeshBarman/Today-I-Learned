@@ -104,3 +104,17 @@ def create_post(db: Session, data: schemas.TILPostCreate, user_id: int):
 
 def get_user_post(db: Session, user_id: int):
     return db.query(models.TILPost).filter(models.TILPost.owner_id == user_id).all()
+
+
+
+def get_post_by_id(db: Session, post_id: int):
+    return db.query(models.TILPost).filter(models.TILPost.id == post_id).first()
+
+
+def delete_post(db: Session, post_id: int):
+    post = db.query(models.TILPost).filter(models.TILPost.id == post_id).first()
+    if post:
+        db.delete(post)
+        db.commit()
+        return True
+    return False

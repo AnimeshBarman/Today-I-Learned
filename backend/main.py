@@ -121,6 +121,20 @@ def create_post(
     return new_post
 
 
+@app.delete("/delete-post/{post_id}", status_code=status.HTTP_200_OK)
+def delete_post(
+    post_id: int,
+    db: Session = Depends(database.get_db),
+    current_user_id: int = Depends(get_current_user)
+):
+    post = crud.get_post_by_id(db, post_id=post_id)
+    if not post:
+        raise HTTPException(status_code=404, detail="Post not found..!")
+    if post.user_id != current_user_id:
+        raise HTTPException(status_code=403, detail="Not authorized to delete this post..!")
+    crud.delete_post(db, post_id=post_id)
+    return {"message": "Post deleted successfully."}
+
 
 @app.get("/get-posts")
 def get_all_posts(
