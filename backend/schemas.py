@@ -8,11 +8,15 @@ class TILPostCreate(BaseModel):
     title: str = Field(..., min_length=3, max_length=100)
     short_note: Optional[str] = None
 
+class KeywordSchema(BaseModel):
+    text: str = Field(description="The keyword name")
+    is_done: bool = Field(default=False, description="Always set to False initially")
+
 class TILPost(TILPostCreate):
     id: int
     related_topics: List[str]
     web_links: List[str]
-    keywords: List[str]
+    keywords: List[KeywordSchema]
     
     owner_id: int
     created_at: datetime

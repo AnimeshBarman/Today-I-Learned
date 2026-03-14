@@ -47,8 +47,7 @@ prompt = PromptTemplate(
     Instructions:
     1. Provide 3-4 highly relevant related topics.
     2. Extract and list the exact URL links from the Search Results provided. If no results, provide 2-3 reliable general links (like Wikipedia or official docs).
-    3. List 5-6 technical keywords related to {title}.
-    4. Provide a brief summary of what you found.
+    3. List 5-6 technical keywords related to {title}. Keywords must be a list of objects, where each object has 'text' (the keyword) and 'is_done' (boolean, set to false).
 
     {format_instructions}
     

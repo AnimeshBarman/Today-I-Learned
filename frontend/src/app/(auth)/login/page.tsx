@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -7,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import api from "@/lib/axios";
 import { useAuthStore } from "@/store/useAuthStore";
+import Link from "next/link";
 
 const loginSchema = z.object({
   username: z.string().email("Enter correct email..!"),
@@ -23,21 +25,17 @@ export default function LoginPage() {
     resolver: zodResolver(loginSchema),
   });
 
-  // 3. Submit Logic
   const onSubmit = async (data: any) => {
     setLoading(true);
     try {
-      // Swagger compatibility ke liye FormData bhej rahe hain
       const formData = new FormData();
       formData.append("username", data.username);
       formData.append("password", data.password);
 
       const res = await api.post("/login", formData);
       
-      // Zustand store mein tokens save karna
       setAuth(res.data.access_token, res.data.refresh_token);
       
-      // Dashboard par bhejna
       router.push("/dashboard");
     } catch (err: any) {
       alert("Login failed: " + (err.response?.data?.detail || "Unknown error"));
@@ -78,9 +76,15 @@ export default function LoginPage() {
             disabled={loading}
             className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 rounded font-semibold transition-all active:scale-95 disabled:opacity-50"
           >
-            {loading ? "Rukiye..." : "Login Karein"}
+            {loading ? "Pls Wait..." : "Login"}
           </button>
         </form>
+        <p className="text-center text-sm text-zinc-500 mt-6">
+          Don't have an account?{" "}
+          <Link href="/signup" className="text-blue-500 hover:text-blue-400 font-semibold transition-colors">
+            Sign up here
+          </Link>
+        </p>
       </div>
     </div>
   );

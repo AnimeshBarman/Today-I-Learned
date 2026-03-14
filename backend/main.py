@@ -121,6 +121,31 @@ def create_post(
     return new_post
 
 
+
+
+@app.patch("/posts/{post_id}/keyword")
+def toggle_keyword(
+    post_id: int, 
+    keyword_index: int, 
+    db: Session = Depends(database.get_db),
+    current_user_id: int = Depends(get_current_user)
+):
+    post = db.query(models.TILPost).filter(models.TILPost.id == post_id).first()
+    
+    if not post or post.owner_id != current_user_id:
+        raise HTTPException(status_code=404, detail="Post not found..!")
+
+    updated_keywords = list(post.keywords) 
+    
+    updated_keywords[keyword_index]["is_done"] = not updated_keywords[keyword_index]["is_done"]
+    
+    post.keywords = updated_keywords
+    db.commit()
+    
+    return {"message": "Status updated", "is_done": updated_keywords[keyword_index]["is_done"]}
+
+
+
 @app.delete("/delete-post/{post_id}", status_code=status.HTTP_200_OK)
 def delete_post(
     post_id: int,
@@ -130,7 +155,7 @@ def delete_post(
     post = crud.get_post_by_id(db, post_id=post_id)
     if not post:
         raise HTTPException(status_code=404, detail="Post not found..!")
-    if post.user_id != current_user_id:
+    if post.owner_id != current_user_id:
         raise HTTPException(status_code=403, detail="Not authorized to delete this post..!")
     crud.delete_post(db, post_id=post_id)
     return {"message": "Post deleted successfully."}
